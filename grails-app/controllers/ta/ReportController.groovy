@@ -20,6 +20,37 @@ class ReportController {
 		respond new Report(params)
 	}
 
+	def search() {
+		render view: "search"
+	}
+	
+	public Report searchReport(String nome){
+		def reportInstance = Report.findByName(nome)
+		return reportInstance
+	}
+	
+	def consult() {
+		def auxList = Report.list()
+		def reportList = auxList.findAll {
+			it.name.toLowerCase().contains(params.consult.toLowerCase()) || it.name.toLowerCase().contains(params.consult.toLowerCase())
+		}
+		if (reportList == null) {
+			flash.message = message(code: 'default.not.found.message', args: [
+				message(code: 'report.label', default: 'Report'),
+				params.id
+			])
+			render view: "search", model: [reportInstanceList: [], reportInstanceCount: 0]
+		} else if (!reportList) {
+			flash.message = message(code: 'default.not.found.message', args: [
+				message(code: 'report.label', default: 'Report'),
+				params.id
+			])
+			render view: "search", model: [reportInstanceList: [], reportInstanceCount: 0]
+		}else {
+			render view: "search", model: [reportInstanceList: reportList, reportInstanceCount: reportList.size()]
+		}
+	}
+	
 	public void addStudentToReport(Student student, Report reportInstance){
 		if(reportInstance!=null){
 			reportInstance.addToStudents(student)
