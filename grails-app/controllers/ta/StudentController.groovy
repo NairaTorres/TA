@@ -5,7 +5,6 @@ import org.apache.ivy.core.settings.Validatable
 import java.text.SimpleDateFormat
 import java.lang.*
 import ta.Evaluation
-import ta.EvaluationsByCriterion
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -51,15 +50,17 @@ class StudentController {
 	}
 
 	def List evaluate(String eval, int qtdEvaluations, double tempMedia) {
+		double resultMedia = tempMedia
+		int resultQtdEvaluations = qtdEvaluations
 		if (!eval.equals("--")) {
-			qtdEvaluations++
-			if (eval.equals("MA")) tempMedia += 9
-			else if (eval.equals("MPA")) tempMedia += 6
-			else tempMedia += 3
+			resultQtdEvaluations++
+			if (eval.equals("MA")) resultMedia += 9
+			else if (eval.equals("MPA")) resultMedia += 6
+			else resultMedia += 3
 		}
-		[qtdEvaluations, tempMedia]
+		[resultQtdEvaluations, resultMedia]
 	}
-
+	
 	public boolean checkTotalAverage(double mediaAluno) {
 		double media = 0
 		for (Student student : Student.list()) {
